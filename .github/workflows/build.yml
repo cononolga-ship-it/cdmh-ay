@@ -1,0 +1,35 @@
+name: Build GHCR image
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - cdmh-ay-azure-ready.zip
+      - .github/workflows/build.yml
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Extract source
+        run: |
+          mkdir app
+          unzip -q cdmh-ay-azure-ready.zip -d app
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - uses: docker/build-push-action@v6
+        with:
+          context: ./app
+          push: true
+          tags: |
+            ghcr.io/${{ github.repository_owner }}/cdmh-ay:0.4.0
+            ghcr.io/${{ github.repository_owner }}/cdmh-ay:${{ github.sha }}
