@@ -3,6 +3,9 @@ targetScope = 'resourceGroup'
 @description('Azure region. Keep all resources in one region.')
 param location string = resourceGroup().location
 
+@description('Managed Identity region. Set this to the existing identity region when resuming a partial deployment.')
+param identityLocation string = location
+
 @description('Short lowercase deployment name used in globally unique resource names.')
 @minLength(3)
 @maxLength(18)
@@ -50,7 +53,7 @@ var publicBaseUrl = 'https://${webAppName}.${environment.properties.defaultDomai
 
 resource identity 'Microsoft.ManagedIdentity/userAssignedIdentities@2023-01-31' = {
   name: identityName
-  location: location
+  location: identityLocation
 }
 
 resource environment 'Microsoft.App/managedEnvironments@2024-03-01' = {
