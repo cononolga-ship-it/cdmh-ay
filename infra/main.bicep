@@ -32,6 +32,9 @@ param mcpTokenSigningSecret string
 
 param googleClientId string
 param youtubeChannelId string
+@description('JSON array of isolated channel definitions. Empty preserves legacy single-channel mode.')
+param youtubeChannelsJson string = ''
+param defaultChannelKey string = 'conon_d'
 param ownerGoogleEmail string
 param ytReachJobId string = ''
 param microsoftClientId string
@@ -270,6 +273,8 @@ var commonEnvironment = [
   { name: 'NODE_ENV', value: 'production' }
   { name: 'GOOGLE_CLIENT_ID', value: googleClientId }
   { name: 'YOUTUBE_CHANNEL_ID', value: youtubeChannelId }
+  { name: 'YOUTUBE_CHANNELS_JSON', value: youtubeChannelsJson }
+  { name: 'DEFAULT_CHANNEL_KEY', value: defaultChannelKey }
   { name: 'YT_REACH_JOB_ID', value: ytReachJobId }
   { name: 'MICROSOFT_CLIENT_ID', value: microsoftClientId }
   { name: 'MICROSOFT_TENANT_ID', value: microsoftTenantId }

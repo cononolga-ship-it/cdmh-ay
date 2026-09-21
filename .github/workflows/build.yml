@@ -31,5 +31,5 @@ jobs:
           context: ./app
           push: true
           tags: |
-            ghcr.io/${{ github.repository_owner }}/cdmh-ay:0.4.4
+            ghcr.io/${{ github.repository_owner }}/cdmh-ay:0.5.0
             ghcr.io/${{ github.repository_owner }}/cdmh-ay:${{ github.sha }}
