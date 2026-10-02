@@ -22,11 +22,7 @@ param googleClientSecret string
 @secure()
 param googleRefreshToken string
 @secure()
-param microsoftClientSecret string
-@secure()
-param microsoftBootstrapRefreshToken string
-@secure()
-param microsoftTokenEncryptionKey string
+param runtimeStateEncryptionKey string
 @secure()
 param mcpTokenSigningSecret string
 
@@ -37,8 +33,6 @@ param youtubeChannelsJson string = ''
 param defaultChannelKey string = 'conon_d'
 param ownerGoogleEmail string
 param ytReachJobId string = ''
-param microsoftClientId string
-param microsoftTenantId string = 'consumers'
 param mcpAccessTokenTtlSeconds int = 900
 param mcpRefreshTokenTtlSeconds int = 15552000
 param collectionLookbackDays int = 30
@@ -178,9 +172,7 @@ resource webApp 'Microsoft.App/containerApps@2024-03-01' = {
       secrets: [
         { name: 'google-client-secret', value: googleClientSecret }
         { name: 'google-refresh-token', value: googleRefreshToken }
-        { name: 'microsoft-client-secret', value: microsoftClientSecret }
-        { name: 'microsoft-bootstrap-refresh-token', value: microsoftBootstrapRefreshToken }
-        { name: 'microsoft-token-encryption-key', value: microsoftTokenEncryptionKey }
+        { name: 'runtime-state-encryption-key', value: runtimeStateEncryptionKey }
         { name: 'mcp-token-signing-secret', value: mcpTokenSigningSecret }
       ]
     }
@@ -201,9 +193,7 @@ resource webApp 'Microsoft.App/containerApps@2024-03-01' = {
             { name: 'MCP_REFRESH_TOKEN_TTL_SECONDS', value: string(mcpRefreshTokenTtlSeconds) }
             { name: 'GOOGLE_CLIENT_SECRET', secretRef: 'google-client-secret' }
             { name: 'GOOGLE_REFRESH_TOKEN', secretRef: 'google-refresh-token' }
-            { name: 'MICROSOFT_CLIENT_SECRET', secretRef: 'microsoft-client-secret' }
-            { name: 'MICROSOFT_REFRESH_TOKEN', secretRef: 'microsoft-bootstrap-refresh-token' }
-            { name: 'MICROSOFT_TOKEN_ENCRYPTION_KEY', secretRef: 'microsoft-token-encryption-key' }
+            { name: 'RUNTIME_STATE_ENCRYPTION_KEY', secretRef: 'runtime-state-encryption-key' }
             { name: 'MCP_TOKEN_SIGNING_SECRET', secretRef: 'mcp-token-signing-secret' }
           ])
         }
@@ -240,9 +230,7 @@ resource collectorJob 'Microsoft.App/jobs@2024-03-01' = {
       secrets: [
         { name: 'google-client-secret', value: googleClientSecret }
         { name: 'google-refresh-token', value: googleRefreshToken }
-        { name: 'microsoft-client-secret', value: microsoftClientSecret }
-        { name: 'microsoft-bootstrap-refresh-token', value: microsoftBootstrapRefreshToken }
-        { name: 'microsoft-token-encryption-key', value: microsoftTokenEncryptionKey }
+        { name: 'runtime-state-encryption-key', value: runtimeStateEncryptionKey }
       ]
     }
     template: {
@@ -258,9 +246,7 @@ resource collectorJob 'Microsoft.App/jobs@2024-03-01' = {
           env: union(commonEnvironment, [
             { name: 'GOOGLE_CLIENT_SECRET', secretRef: 'google-client-secret' }
             { name: 'GOOGLE_REFRESH_TOKEN', secretRef: 'google-refresh-token' }
-            { name: 'MICROSOFT_CLIENT_SECRET', secretRef: 'microsoft-client-secret' }
-            { name: 'MICROSOFT_REFRESH_TOKEN', secretRef: 'microsoft-bootstrap-refresh-token' }
-            { name: 'MICROSOFT_TOKEN_ENCRYPTION_KEY', secretRef: 'microsoft-token-encryption-key' }
+            { name: 'RUNTIME_STATE_ENCRYPTION_KEY', secretRef: 'runtime-state-encryption-key' }
           ])
         }
       ]
@@ -276,8 +262,6 @@ var commonEnvironment = [
   { name: 'YOUTUBE_CHANNELS_JSON', value: youtubeChannelsJson }
   { name: 'DEFAULT_CHANNEL_KEY', value: defaultChannelKey }
   { name: 'YT_REACH_JOB_ID', value: ytReachJobId }
-  { name: 'MICROSOFT_CLIENT_ID', value: microsoftClientId }
-  { name: 'MICROSOFT_TENANT_ID', value: microsoftTenantId }
   { name: 'AZURE_COSMOS_ENDPOINT', value: cosmos.properties.documentEndpoint }
   { name: 'AZURE_COSMOS_DATABASE_NAME', value: databaseName }
   { name: 'AZURE_COSMOS_CONTAINER_NAME', value: containerName }
